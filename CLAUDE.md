@@ -1,14 +1,58 @@
+## Approach Discipline
+
+- Do NOT execute or edit until the user explicitly approves the plan. After presenting a plan, wait for confirmation before any tool use beyond read-only exploration.
+- Avoid excessive clarifying questions or exploration when the request is concrete (e.g., 'edit marketplace.json'). Make the change, then explain.
+- For multi-step work, present a numbered plan first, then pause.
+
+## Honesty Over Hallucination
+
+- If asked about an unfamiliar term, plugin, or command (e.g., 'Bramblesnit', unknown skills), say 'I don't recognize this — can you point me to docs or context?' Do NOT fabricate plausible-sounding answers.
+- Before claiming a slash command exists, verify it is registered in ~/.claude/skills/ or the active plugin set.
+
+## Workflow Discipline
+
+- Present plans/diagrams inline FIRST before writing files
+- Wait for explicit approval before moving from planning to execution
+- When user says 'proceed', confirm scope before tool execution if multiple paths exist
+
 ## Project Context
 
-This project uses OpenClaw with Ollama for local LLM inference, Telegram bot integration, and Cloudflare tunnels on Docker. The primary agent model is `openai-codex/gpt-5.4` (cloud-routed via the `openai-codex` provider); the local fallback is `ollama/qwen3.5:9b`, with `hf.co/unsloth/gemma-4-E4B-it-GGUF:UD-Q4_K_XL` also registered. Do not assume or suggest other models without checking `ollama list` first (for local models) or `~/.openclaw/openclaw.json` under `agents.defaults.models` (for agent bindings).
+This project uses OpenClaw with Ollama for local LLM inference, Telegram bot integration, and Cloudflare tunnels on Docker. The primary agent model is `openai-codex/gpt-5.5` (cloud-routed via the `openai-codex` provider); the local fallback is `ollama/qwen3.5:9b`, with `hf.co/unsloth/gemma-4-E4B-it-GGUF:UD-Q4_K_XL` also registered. Do not assume or suggest other models without checking `ollama list` first (for local models) or `~/.openclaw/openclaw.json` under `agents.defaults.models` (for agent bindings).
+
+## Kalamazoo AI Lab Context
+
+- Project: AI-native corporate OS / KAI identity architecture / AI-defense security
+- When research requires Google Docs, ask user to paste content (Claude cannot authenticate)
+- Default to grounded analysis: inspect actual codebase/config before strategic recommendations
 
 ## Configuration Files
 
 When editing JSON config files (especially openclaw.json), always validate JSON syntax after edits using `cat <file> | python3 -m json.tool` or `jq .` before reporting success. Never edit JSON files that the user may be concurrently editing without confirming first.
 
+## OpenClaw Stack Conventions
+
+- Config lives in openclaw.json; Telegram credentials are under `.channels` (NOT `.integrations`).
+- Validate JSON after every edit to settings.json or openclaw.json (use `jq . <file>` or the JSON validation hook).
+- PM2 Node processes need `max-old-space-size` set in the ecosystem file when memory pressure is observed.
+- Never edit settings.json or openclaw.json without first reading current contents — concurrent user edits have caused conflicts.
+
 ## General Rules
 
 If you cannot perform a task (browser-based setup, authenticated URL access, actions blocked by plan mode), say so immediately rather than attempting workarounds that waste time. Never fabricate answers—if you don't know something, say so.
+
+## OpenClaw/Sentinel Stack
+
+- Sentinel config uses `.channels` not `.integrations` in JSON paths
+- PreToolUse hooks: exit code 2 blocks, exit code 1 does not
+- Verify display detection includes ALL connected displays before framebuffer ops
+- Never auto-revert openclaw.json Phase 1 edits
+- **Model update atomicity**: When changing `.agents.defaults.model.primary` in openclaw.json, ALSO update `EXPECTED_PRIMARY_MODEL` in `~/.claude/sentinel/checks/model-routing.sh`. Mismatched values produce a permanent WARNING incident every 5 min that never auto-resolves.
+- **`"to "` prefix trap**: Manually editing openclaw.json with nano can accidentally produce `"to openai-codex/gpt-5.5"` instead of `"openai-codex/gpt-5.5"`. Always verify after edits: `jq '.agents.defaults.model.primary' ~/.openclaw/openclaw.json`
+- **`qwen3.5:4b` is broken as a fallback**: It loops infinitely on the OpenAI-compat `/v1/chat/completions` endpoint. Approved local fallback is `ollama/qwen3.5:9b` only.
+- **Codex token refresh is human-only**: `codex login status` never advances `last_refresh`. Only `codex login` (interactive browser flow) actually refreshes OAuth tokens. Run it immediately when sentinel reports `codex_token_expiry`.
+- **`pending_approval` incidents never auto-resolve**: Handle via `/sentinel-review` or manually set `status` to `"acknowledged"` in the incident JSON. They do NOT escalate to Telegram — they accumulate silently.
+- **Sentinel `stopped` status is normal**: `sentinel-orchestrator` and `sentinel-coordinator` always show `stopped` in `pm2 list` between cron fires. Correct pattern: `autorestart: false`, fire-and-exit. Only investigate if restart count (↺) spikes unexpectedly.
+- **SecretRefs resolved from `.openclaw/.env`, not shell env**: OpenClaw's `secrets.providers.default.source = "env"` reads `~/.openclaw/.env` (dotenv file), NOT the current shell's exported variables. Setting `TELEGRAM_TOKEN=x` in shell has no effect.
 
 ## gstack
 
@@ -64,3 +108,10 @@ Key routing rules:
 - Review what gstack has learned → invoke /learn
 - Tune question sensitivity → invoke /plan-tune
 - Code quality dashboard → invoke /health
+- Display config, screen tearing, xorg, nvidia-settings, monitor layout → invoke /nvidia-display-audit
+
+## Ultraplan / Git Prerequisites
+
+- Ultraplan and batch operations REQUIRE the working directory to be a git repo with at least one commit
+- Before suggesting ultraplan, verify: `git rev-parse --git-dir && git log -1` succeed
+- gh CLI: confirm `gh auth status` shows the correct account before any GitHub operations
