@@ -1,3 +1,7 @@
+## Interaction Style
+
+- When the user asks for a walkthrough, diagram, or explanation, present it inline in the conversation FIRST and wait for confirmation before writing any files.
+
 ## Approach Discipline
 
 - Do NOT execute or edit until the user explicitly approves the plan. After presenting a plan, wait for confirmation before any tool use beyond read-only exploration.
@@ -35,6 +39,18 @@ When editing JSON config files (especially openclaw.json), always validate JSON 
 - Validate JSON after every edit to settings.json or openclaw.json (use `jq . <file>` or the JSON validation hook).
 - PM2 Node processes need `max-old-space-size` set in the ecosystem file when memory pressure is observed.
 - Never edit settings.json or openclaw.json without first reading current contents — concurrent user edits have caused conflicts.
+
+## Shell & Scripting Conventions
+
+- Always run scripts with `set -euo pipefail` awareness: validate JSON paths (e.g. `.channels` vs `.integrations`) and numeric vs string comparisons, and test sentinel/check scripts produce non-zero results before declaring success.
+
+## Long-Form Output
+
+- For long-running design docs, research plans, and white papers, write to the file incrementally in checkpointed sections rather than one large pass, so progress survives usage-limit cutoffs.
+
+## Verification
+
+- When verification surfaces latent bugs outside the requested scope, flag them clearly with a TODO list rather than fixing silently, then ask whether to address them.
 
 ## General Rules
 
