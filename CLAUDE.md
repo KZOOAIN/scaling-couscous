@@ -3,6 +3,11 @@
 - For walkthroughs/explanations, present inline (ASCII diagrams, prose) FIRST before writing to files.
 - Never write a full document to disk when the user asked for a step-by-step explanation.
 
+## Plan-First Discipline
+- For multi-step or design tasks, present a plan or inline ASCII diagram BEFORE writing files.
+- Do not jump to creating full documents when the user asks for a walkthrough or diagram.
+- Use plan mode for any task that touches 3+ files or involves architecture decisions.
+
 ## Interaction Style
 
 - When the user asks for a walkthrough, diagram, or explanation, present it inline in the conversation FIRST and wait for confirmation before writing any files.
@@ -40,6 +45,16 @@ When asked for a walkthrough, diagram, or explanation, present it INLINE first (
 ## Session Budget Awareness
 - For large multi-phase work (white papers, system audits, framework builds), checkpoint progress to a STATE.md or scratchpad file every major phase so work is resumable if the session hits a usage limit.
 - Prefer narrower scoped tasks per session over single mega-tasks.
+
+## Session Limit Awareness
+- For long tasks (white papers, multi-phase builds), checkpoint progress to STATE.md or via context-save skill every major phase.
+- Prefer resumable-pipeline patterns over monolithic execution.
+- If approaching context limits, summarize state before continuing rather than risk mid-execution cutoff.
+
+## Verification Protocol
+- After fixing any bug, run a fresh-shell verification to confirm the fix works end-to-end.
+- For sentinel/check scripts: verify against live config and prove correctness, don't just test the happy path.
+- Flag any latent bugs discovered during verification (even if outside scope) rather than silently ignoring them.
 
 ## Verification Discipline
 
