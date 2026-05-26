@@ -1,3 +1,8 @@
+## Plan-First Workflow
+- Always present a plan in plan mode before executing multi-step or destructive work.
+- For walkthroughs/explanations, present inline (ASCII diagrams, prose) FIRST before writing to files.
+- Never write a full document to disk when the user asked for a step-by-step explanation.
+
 ## Interaction Style
 
 - When the user asks for a walkthrough, diagram, or explanation, present it inline in the conversation FIRST and wait for confirmation before writing any files.
@@ -32,10 +37,17 @@ When asked for a walkthrough, diagram, or explanation, present it INLINE first (
 - Sessions frequently hit usage limits mid-task. For any task estimated >30 min, write a STATE.md / checkpoint file early so work can be resumed in a new session.
 - Prefer the resumable-pipeline skill pattern for white papers, audits, and multi-phase builds.
 
+## Session Budget Awareness
+- For large multi-phase work (white papers, system audits, framework builds), checkpoint progress to a STATE.md or scratchpad file every major phase so work is resumable if the session hits a usage limit.
+- Prefer narrower scoped tasks per session over single mega-tasks.
+
 ## Verification Discipline
 
 - After creating or modifying any sentinel check, driver script, or skill, run it in a fresh shell to catch arg-parsing, strict-mode (set -u), and filename-prefix bugs before declaring done.
 - When fixing one bug in a sentinel/check script, scan sibling scripts for the same class of bug (string vs numeric comparison, wrong JSON path, allowlist init order).
+- After fixing a sentinel/check script, always run it end-to-end against live config and confirm a non-trivial pass (not a silent always-pass).
+- Use numeric comparison (not string sort) for ports and version numbers.
+- When deploying scripts under `set -u` / strict mode, test in a fresh shell to catch unbound-variable and arg-parsing bugs.
 
 ## Project Context
 
