@@ -1,0 +1,90 @@
+pipeline: cfo-white-paper-v2
+title: CFO White Paper v2
+status: complete
+current_phase: pdf-generation
+created: '2026-05-26T06:41:33Z'
+updated: '2026-05-26T08:17:18Z'
+phases:
+- name: research-fixes
+  status: complete
+  artifacts:
+  - path: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+    sha256: 136ab6e6d1bb545e
+  criteria:
+  - id: dollar-claim-fixed
+    description: $2.4T replaces $26T humanoid claim in body
+    type: grep
+    file: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+    pattern: 2\.4 trillion
+  - id: no-26T-in-body
+    description: $26T removed from body (allowed only in Appendix C citation)
+    type: shell
+    command: 'grep -n "\$26 trillion" /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+      | grep -v "Appendix C" | grep -v "NotebookLM" | grep -v "has been replaced"
+      | wc -l | awk ''{exit ($1 > 0 ? 1 : 0)}'''
+  - id: arr-claim-softened
+    description: Anthropic ARR uses doubling cadence phrasing
+    type: grep
+    file: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+    pattern: doubling every six weeks
+  - id: inline-citations-present
+    description: Inline [Source:] markers present for key claims
+    type: shell
+    command: 'grep -c "\[Source:" /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+      | awk ''{exit ($1 < 5 ? 1 : 0)}'''
+  - id: risks-section-present
+    description: '## Risks section exists'
+    type: grep
+    file: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+    pattern: ^## Risks
+  - id: competitive-landscape-present
+    description: Competitive landscape section present
+    type: grep
+    file: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+    pattern: Competitive landscape
+  started: '2026-05-26T06:41:41Z'
+  completed: '2026-05-26T08:10:06Z'
+- name: ascii-structure
+  status: complete
+  artifacts:
+  - path: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+    sha256: 136ab6e6d1bb545e
+  criteria:
+  - id: ascii-diagram-present
+    description: ASCII diagram block present as first content
+    type: grep
+    file: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+    pattern: '```diagram'
+  - id: diagram-has-box-chars
+    description: Diagram contains box-drawing characters
+    type: grep
+    file: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+    pattern: '[┌└│─┐┘]'
+  started: '2026-05-26T08:10:32Z'
+  completed: '2026-05-26T08:11:01Z'
+- name: doc-criteria-validation
+  status: complete
+  artifacts:
+  - path: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+    sha256: 136ab6e6d1bb545e
+  criteria:
+  - id: doc-criteria-5-5
+    description: 5/5 doc-criteria acceptance tests pass (T1-T5)
+    type: doc-criteria
+    draft: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.md
+    brief: /home/kai/.claude/plans/i-am-meeting-with-proud-nygaard.md
+  started: '2026-05-26T08:12:03Z'
+  completed: '2026-05-26T08:14:08Z'
+- name: pdf-generation
+  status: complete
+  artifacts:
+  - path: /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.pdf
+    sha256: 085b5ee79d45d0be
+  criteria:
+  - id: pdf-exists
+    description: PDF file exists and is non-empty
+    type: shell
+    command: test -s /home/kai/.openclaw/workspace/deliverables/CFO_PARTNER_MEETING_2_WHITE_PAPER_v2.pdf
+  started: '2026-05-26T08:14:16Z'
+  completed: '2026-05-26T08:16:31Z'
+brief: /home/kai/.claude/plans/i-am-meeting-with-proud-nygaard.md

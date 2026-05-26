@@ -162,6 +162,8 @@ Key routing rules:
 - Upgrade gstack → invoke /gstack-upgrade
 - Save progress, "save my work" → invoke /context-save
 - Resume, restore, "where was I" → invoke /context-restore
+- Start a multi-phase pipeline (white paper, research plan, audit) → invoke /resumable-pipeline
+- Resume an in-flight pipeline, "pick up where I left off" → invoke /resume
 - Security audit, OWASP, "is this secure" → invoke /cso
 - Make a PDF, document, publication → invoke /make-pdf
 - Launch real browser for QA → invoke /open-gstack-browser

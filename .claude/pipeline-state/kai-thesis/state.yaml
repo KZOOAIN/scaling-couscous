@@ -1,0 +1,31 @@
+pipeline: kai-thesis
+title: KAI Strategic Thesis
+status: complete
+current_phase: imported
+created: '2026-05-26T08:16:38Z'
+updated: '2026-05-26T08:16:38Z'
+phases:
+- name: imported
+  status: complete
+  started: '2026-05-26T08:16:38Z'
+  completed: '2026-05-26T08:16:38Z'
+  artifacts:
+  - path: /home/kai/kai-thesis/thesis.md
+    sha256: c4c8e97e54580aad
+  - path: /home/kai/kai-thesis/CHANGES.md
+    sha256: 309444c726b0aabe
+  - path: /home/kai/kai-thesis/STATE.md
+    sha256: 350e9e0bdfea4c6f
+  criteria_verdict: imported — not re-verified
+  criteria: []
+  notes: 'Phase 0 complete — setup done. pandoc not installed; PDF will be skipped.
+
+    Phase 1 complete — 6 sources scanned (IDEA_ARCHITECTURE, KAI Defense, robotics
+    thesis, PLAN3-25, Codex memories, Codex raw_memories). GBrain: no results. codex_last_ts:
+    1779496246
+
+    Phase 3 complete — thesis.md written, v1 (first run, no archive)
+
+    Phase 4-6 complete'
+imported_from: /home/kai/kai-thesis/STATE.md
+brief: /home/kai/kai-thesis/thesis.md
